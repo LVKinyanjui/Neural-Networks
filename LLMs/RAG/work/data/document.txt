@@ -1,0 +1,2853 @@
+﻿Anteater 3D VPTW, FWP : Spec doc  
+LIVE
+Last update: 10/26/2023
+________________
+
+
+This document contains instructions for annotating vehicles, pedestrians and two-wheelers for validation.
+
+
+The document is divided into objects to annotate, vehicles, pedestrians, two-wheelers and nondescript. Objects to annotate describe the general limitations of where a vehicle, pedestrian, and two-wheelers should be annotated. 
+
+
+Vehicles, pedestrian and two-wheelers annotation starts with a table of all properties that makes up a vehicle, pedestrian or two-wheeler annotation and continues with subchapters further describing all properties. Nondescript vehicles, pedestrians and two-wheelers describe how to annotate vehicles, pedestrians and two-wheelers that are outside the regions where we want to annotate two-wheelers and some special cases. 
+Key Sections
+* Summary of task
+* Workflow
+* When to annotate objects?
+* Annotation Rules
+* Table of labels 
+* Table of attributes
+* Label Definitions
+Summary of task
+* Please create bounding boxes/cuboid for each object in the taxonomy across all frames. 
+* Each task will contain around 300 frames and each object should be tracked with a single ID.  
+* Each bounding box should be drawn as tightly as possible to the object. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Workflow
+ Please take the following steps to avoid making errors and to ensure highest quality: 
+
+
+1. Scroll through the frames to familiarize yourself with the task, take note of areas that are congested with objects or have objects that are far away/hard to see.
+
+
+2. Starting with the first frame, working in an order where the further objects are labeled first, select an object to label. 
+
+
+1. Draw the first label on the first frame, make sure the label is tight to the visible sections and assume the entire size of the object, if any portion of it is occluded.
+
+
+i) If the object type, attributes or size of the object are initially unclear, scroll through the run segment to find the best view of the object. Use the visual information from the frame with the best view to estimate the objects’ size in frames the object is occluded.  
+
+
+2. Continue to track and annotate that same object through all other frames the object has lidar dots or can be seen in the vision from the image - be sure to check all frames to be sure the object doesn’t disappear and reappear in another frame (it is very important that all objects are tracked with a single ID).
+
+
+3. Returning back to the first frame, select another object and repeat step 2 for all visible objects.
+4. Move to the next frame where an unlabeled object appears and repeat these steps. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+When to annotate objects?
+
+
+Two things need to be considered when trying to annotate in this project:
+
+
+* 1. Is it visible from the camera?
+* 2. Does it have the minimum lidar points?
+If those 2 questions are YES, then ANNOTATE THE OBJECT!
+If there is not enough LiDAR data, but the object is visible in the camera, then ANNOTATE THE OBJECT!
+
+
+Example 1:
+Is it visible from the camera? Yes
+Does it have the minimum lidar points? Yes
+CONCLUSION: ANNOTATE
+
+
+Example 2:
+Is it visible from the camera? Yes
+Does it have the minimum lidar points? No
+CONCLUSION: ANNOTATE
+
+
+Example 3:
+Is it visible from the camera? No
+Does it have the minimum lidar points? No
+CONCLUSION: DO NOT ANNOTATE
+___________________________________________________________________________
+Reminder: DO NOT ANNOTATE objects behind the Ego Car
+All objects that are not visible in camera view SHOULD NOT be annotated, this means that all objects behind the ego car in frame 1 shall not be annotated.
+___________________________________________________________________________
+
+
+
+
+Annotation Rules
+Rule
+	Example
+	Occlusion / Truncation
+	Remember that the occlusion level is now also determined by the edges of the camera and the hood of the egocar.
+
+
+So as the vehicle advances the occlusion changes constantly until the object is completely occluded. 
+
+
+You need to change the value in occlusion in every frame where the parts of the ego car encounter with the object see example on the right
+	  
+
+	Bounding box
+	Draw the 3D Bounding Box as tightly as possible to the object. 
+
+
+* A box never changes size even if it is on a pedestrian and the pedestrian crouches.
+	  
+  
+
+	VEHICLE 
+	Distance and size conditions
+
+
+Vehicles which fulfill distance and size conditions for annotation shall be annotated as vehicle objects (see chart below).
+
+
+Vehicles which fulfill distance and size conditions for annotation as Nondescript shall be annotated as NonDescriptVehicle (see chart below).
+
+
+Vehicle objects are those objects which the driver, or driving system, must take into account when determining which actions to take while driving.
+
+
+Vehicles which do not fulfill the distance and size conditions for annotation as vehicles or Nondescript do not need to be annotated.
+
+
+	
+
+	The distance and size conditions are summarized in the following.
+	
+
+	Object type
+	Distance Pixel | height
+	Vehicle
+
+
+Car
+Van
+Suv
+Kcar
+AutoRickshaw
+Pickup
+Trailer
+OtherVehicle
+	
+
+
+
+<= 250m                                        >= 15 pixels
+	Truck
+Bus
+HeavyEquipmentVehicle
+RoadWorkVehicle
+	<= 250m                                       >= 34 pixels
+	NondescriptVehicle
+
+
+Car
+Van
+Suv
+Kcar
+AutoRickshaw
+Pickup
+Trailer
+OtherVehicle
+	> 250m and <= 350m                   >= 10 pixels and < 15 pixels
+	Truck
+Bus
+HeavyEquipmentVehicle
+RoadWorkVehicle
+	> 250m and <= 350m                 >= 24 pixels and < 34 pixels
+	Unannotated Objects
+
+
+Car
+Van
+Suv
+Kcar
+AutoRickshaw
+Pickup
+Trailer
+OtherVehicle
+	
+
+
+
+> 350 m                                      < 10 pixels
+	Truck
+Bus
+HeavyEquipmentVehicle
+RoadWorkVehicle
+	> 350 m                                    < 24 pixels
+	Location Conditions
+
+
+Location conditions for vehicles at a distance up to 100 m:
+
+
+For vehicles located on the Ego Roadway:
+* All vehicles on the Ego Roadway fulfill the location conditions, regardless of lane.
+* Lanes that are separated by a physical barrier are not part of the Ego Roadway.
+
+
+For vehicles not located on the Ego Roadway:
+* Vehicles on other roadways which intersect the Ego Roadway fulfill the location conditions. This includes vehicles on crossings and roundabouts.
+* Vehicles on parking spaces on the side of the Ego Roadway fulfill the location conditions, even if the space the vehicle is parked in is not a legal parking space.
+
+
+Location conditions for vehicles at a distance over 100 m:
+
+
+For vehicles located on the Ego Roadway:
+* Vehicles in the Ego Lane, Left Neigboring Lane and Right Neighboring Lane fulfill the location conditions.
+* Only a part of the vehicle needs to be in one of the above mentioned lanes in order to fulfill the location conditions.
+* Lanes that are separated by a physical barrier are not part of the Ego Roadway.
+
+
+For vehicles not located on the Ego Roadway:
+* Vehicles on other roadways which intersect the Ego Roadway fulfill the location conditions. This includes vehicles on crossings and roundabouts.
+* Vehicles on parking spaces on the side of the Ego Roadway fulfill the location conditions, even if the space the vehicle is parked in is not a legal parking space.
+	
+
+	Other conditions:
+
+
+* The vehicle is an actual vehicle.
+   * It is not a reflection, a picture, a statue etc.
+* The vehicle is not covered by a tarpaulin.
+There are no conditions on vehicle movement. All relevant vehicles, whether they are moving, stopped or parked, shall be annotated.
+	
+
+	NondescriptVehicles
+
+
+A vehicle or a group of vehicles shall be annotated as a NondescriptVehicle object if any of the following are true:
+
+
+* The vehicle fulfills the pixel size or distance interval to be annotated as NondescriptVehicle described in Objects to be annotated, for example vehicles on the EgoRoad that are too far away to be considered as Vehicle annotation.
+* The vehicle is driving on a road that is not part of the EgoRoad.
+* The vehicle is driving on a lane that is separated from the EgoLane by a physical barrier.
+* The vehicle is located on a parking lot or some other surface that is not part of the EgoRoad and does not have an impact on driving of the EgoVehicle.
+* The vehicle is not an actual vehicle (e.g. reflections, statues and posters).
+* The vehicle is covered by a tarpaulin.
+	
+
+	The cuboid should cover the entire vehicle, but NOT including:
+- Side mirrors
+- Antennae
+- Roof racks
+- Open Trunk
+- Open Doors
+- Cargo
+	  
+
+	Any trailer or truck trailer that may have a different dynamic behavior than the vehicle it is attached to, shall always be annotated as a separate object of type Trailer. Trailers come in various shapes and sizes and the goal is to annotate the trailer without including unnecessary background
+	  
+
+	The green object, annotated in the front, is a Truck, whilst the rear object(s) should be identified as Trailer(s)
+	  
+
+	The green object, annotated in the front, is a Truck, whilst the rear object(s) should be identified as Trailer(s)
+	  
+
+	The green object, annotated in the front, is a Car (or Van), whilst the rear object(s) should be identified as Trailer(s)
+	  
+
+	If it’s not possible to determine whether the object is a vehicle or a trailer, annotate it as a vehicle. In this example, annotate it as a Truck.
+	  
+
+	If you can determine the object is a trailer but never see the vehicle that is in the front of the trailer, then you do not need to annotate the vehicle.
+	  
+
+	Van with trailer and vehicle as cargo.
+
+
+Since the cargo is a vehicle, it should be annotated as a NondescriptVehicle object. Cargo should otherwise not be annotated
+Note: For release validation, the cargo should not be annotated, even if the cargo is a vehicle.
+	  
+
+	Vehicles shall be annotated with 3D bounding boxes, based on available LiDAR measurements, in combination with vision based information from the image. If there is no LiDAR data, the 3D bounding box should still be annotated and the vehicle size and position in the world should be estimated according to the table below.
+	
+
+	  
+
+	TWO WHEELER
+	All two-wheelers within 413 meters of the ego vehicle that can be seen in the camera image shall be annotated, either as a Two Wheeler object, or a NondescriptTwoWheeler object. Fully occluded two-wheelers shall also be annotated in some cases – for details see TwoWheeler and NondescriptTwoWheeler.
+
+
+Non-powered two-wheelers:
+* Distance 0 - 160 m to be annotated as TwoWheeler or NondescriptTwoWheeler ( >=18 pixels )
+* Distance 161 - 413 m to be annotated as  NondescriptTwoWheeler ( <18 , >10 pixels )
+* Distance >413 m shall not be annotated (<10 pixels)
+Powered two-wheelers:
+* Distance 0 - 210 m to be annotated as TwoWheeler or NondescriptTwoWheeler ( >=13 pixels )
+* Distance 211 - 413 m to be annotated as  NondescriptTwoWheeler ( <13 , >10 pixels )
+* Distance >413 m shall not be annotated (<10 pixels)
+As a general rule: either both rider and two-wheeler are nondescript, or none of them are. That is, if either the rider or the two-wheeler fulfills the pixel criteria, both must be annotated.
+	
+
+	In order to make accurate annotations the usage of preceding and following frames is encouraged. This support is helpful for clarifying the content of confusing regions, which are still identifiable for the annotators.
+However, if the object cannot be recognized in the current image with enough guarantees, even after using multiple frames, there shall be no annotation.
+	
+
+	In low visibility scenarios, such as during the night, the detection distance for many objects will be lower than during the day. Here it is important to use preceding and following frames with care as it is possible to “know” or predict where objects are despite not being at all visible in the current frame. Using one or two preceding/following frames might be okay but the object or attribute must still be discernible in the current frame.
+	
+
+	Some functions shall be co-annotated, meaning both functions are annotated in the same frames. For two-wheelers the following rules apply:
+
+
+Pedestrians and two-wheelers shall always be co-annotated. This means that a frame annotated according to this two-wheeler instruction shall also have been annotated according to the pedestrian instruction.
+Pedestrians, vehicles, two wheelers and animals shall be co-annotated when the AttachedTo property creates a connection between them in any way.
+	
+
+	A two-wheeler shall be annotated as a TwoWheeler object if, firstly, all of the following statements are true:
+* The two-wheeler fulfills the appropriate distance criteria described in Objects To Be Annotated.
+* The two-wheeler is an actual vehicle: not a reflection, statue, poster, etc.
+Secondly, any of the following statements must be true:
+* The two-wheeler has one or more riders.
+* The two-wheeler is walked by a pedestrian.
+* The two-wheeler is carried or pulled by a vehicle or two-wheeler.
+Annotate two-wheelers without riders NondescriptTwoWheelers.+
+Finally, any of the following statements must be true:
+* Any part of the two-wheeler can be seen in camera image.
+* Any part of the two-wheeler’s rider(s) can be seen in the camera image.
+	
+
+	PEDESTRIAN
+	All people that are visible in the camera image shall be annotated as Pedestrians, if they are within the ranges specified below. This means
+that:
+
+
+* If you cannot see the person in the camera image, you should not annotate them.
+* If you cannot see the person in the LIDAR point cloud, you should annotate them anyway (if they can be seen in the camera image). The 3D bounding box shall be estimated.
+
+
+If a person is riding a TwoWheeler: If you can see either the TwoWheeler or the rider, then annotate both. If one of them is fully occluded, the annotations shall be estimated.
+	
+
+	Every pedestrian described in this specification and observed in the image of the camera must be annotated according to Pedestrian Annotation or NondescriptPedestrian. Notably they also have to be annotated despite being fully occluded in some scenarios, see Co-annotation.
+	
+
+	The measure to determine if an object should be ann vehicle and height in
+Pixels.
+The estimated sizes for pedestrians should be as follows in the subtitles in this square.
+* Pedestrian 1.7m (adult) 
+   * Between 0 and 160 meters should be annotated with Pedestrian Annotation or NondescriptPedestrian (>=25 pixels).
+   * Between 160 and 413  meters should be annotated with NondescriptPedestrian. (<25 , >10 pixels)
+* Pedestrian 1.0m (child) 
+   * Between 0 and 160 meters should be annotated with Pedestrian Annotation or NondescriptPedestrian (>=15 pixels).
+   * Between 160 and 413  meters should be annotated with NondescriptPedestrian. (<15 , >10 pixels)
+* Pedestrians smaller than 10 pixels should not be annotated at all.
+	
+
+	Pedestrians riding powered two wheelers shall be annotated at longer distances than pedestrians not riding powered two wheelers, up to 210 meters.
+
+
+* Pedestrian 1.7 (adult) 
+   * Between 0 and 210 meters should be annotated with Pedestrian Annotation or NondescriptPedestrian. (>=19 pixels)
+   * Between 160 and 413  meters should be annotated with NondescriptPedestrian. (<19 , >10 pixels)
+* Pedestrian 1.0 (child) 
+   * Between 0 and 210 meters should be annotated with Pedestrian Annotation or NondescriptPedestrian. (>=11 pixels)
+   * Between 210 and 413  meters should be annotated with NondescriptPedestrian. (<11 , >10 pixels)
+* Pedestrians smaller than 10 pixels should not be annotated at all.
+	
+
+	In order to make accurate annotations the usage of preceding and following frames is encouraged. This support is helpful for clarifying the content of confusing regions, which are still identifiable for the annotators. 
+
+
+However, if the object cannot be recognized in the current image with enough guarantees, even after using multiple frames, there shall be no annotation.
+	
+
+	In low visibility scenarios, such as during the night, the detection distance for many objects will be lower than during the day. Here it is important to use preceding and following frames with care as it is possible to “know” or predict where objects are despite not being at all visible in the current frame. Using one or two preceding/following frames might be okay but the object or attribute must still be discernible in the current frame.
+	
+
+	Co-annotation
+Some functions shall be co-annotated. For pedestrians the following rules apply:
+* Pedestrians and two wheelers shall always be co-annotated.
+* Pedestrians, vehicles, two wheelers and animals shall be co-annotated when the AttachedTo property creates a connection between
+them in any way. This rule applies even if one of the objects is completely occluded e.g. if a two wheeler is entering the image its driver shall be annotated even if it has not yet entered the image.
+
+
+	
+
+	
+
+
+
+Note: Priorities for annotating objects
+Object > Nondescript > Do not annotate
+These are static attributes (cannot change). Please review all frames to set this label.
+Labels should follow the preference above.
+
+
+________________
+
+
+Table of Labels & Attributes 
+LABELS
+	Vehicle
+	Pedestrian
+	Two-Wheeler
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ATTRIBUTES
+	ObjectType
+	OcclusionLevel 
+	ObjectType 
+	Occlusion
+	AttachedTo
+	OcclusionLevel 
+	LaneAssignment
+	Lane
+	AttachedTo
+	Lights
+	Pose
+	HasRider 
+	EmergencyType
+	OcclusionOrigin
+	Lane 
+	EmergencyLights
+	HeadDirection
+	Lights
+	ProtrudingSides
+	BodyDirection
+	EmergencyLights
+	OpenDoors
+	SignalingATurn
+	ProtrudingSides
+	NondescriptVehicles 
+	SpecialTrafficParticipant
+	CutinOut
+	
+
+	ControlsTraffic
+	OcclusionOrigin
+	
+
+	HeadObscured
+	HasBabySeat
+	
+
+	ClothesObscuringLegs
+	HasCargoBox
+	
+
+	Accessories
+	HasDeliveryBox
+	
+
+	SkinColor
+	
+
+	
+
+	LookingAtPhone
+	
+
+	
+
+	PersonalTransporter
+	
+
+	
+
+	Velocity 
+	
+
+	
+
+	Acceleration
+	
+
+	
+
+Common attributes
+Attribute
+	Definition
+	Labels applicable
+	Type
+	The specific type of object that falls under the label name. Each individual type is defined below.
+
+
+
+
+	All
+	ObstaclePosition
+	The obstaclePosition property describes where the small obstacle is located.
+	All
+	Occlusion
+	The amount of the object that is visible.
+
+
+False  [The object is completely
+Visible, thus it shall be set to False.]
+
+
+True [Object is partly occluded.
+Shall be set to True. ]
+	All
+	_________________________________________________________________________________________________________________
+
+
+
+
+
+
+VEHICLES 
+Contents
+ObjectType
+	Occlusion
+	LaneAssignment
+	Lights
+	EmergencyType
+	EmergencyLights
+	ProtrudingSides
+	OpenDoors
+	
+
+
+
+Type
+
+
+Type
+	Definition
+	Example
+	Car
+	Car, Minivan, Police cars, Customs cars, Cabriolet
+	  
+
+	Pickup
+	 Car
+
+
+	  
+
+	
+
+Suv
+
+
+	
+
+	  
+
+	  Kcar
+
+
+	Example: Small Korean and Japanese cars (e.g. Kei Car), ultramini, microcar, etc
+	  
+
+	Van
+
+
+
+
+	Example: Van, Minibus, Police vans, Ambulances
+
+
+Note: The difference between a box truck and a van is that the box van is a one-piece (unibody), while a box truck is created by adding a cargo box to a chassis cab.
+
+
+	  
+
+  
+
+	Trailer
+
+
+	Example: Trailer, Caravan, Trailers, Lowboy that are attached or detached to trucks.
+	  
+  
+
+	 Truck
+
+
+	Example: Truck, Small Truck, Petrol Truck, Garbage Truck, Firetruck, Police truck, Motorhomes, Trams, Trains, 
+
+
+
+
+Note: The difference between a box truck and a van is that the box van is a one-piece (unibody), while a box truck is created by adding a cargo box to a
+chassis cab.
+
+
+	  
+
+  
+
+  
+
+  
+
+  
+
+
+
+	Bus 
+	Example: Regular buses and school buses
+	
+
+  
+
+
+
+	RoadWorkVehicle
+	A vehicle with a sign mounted in the back with the purpose of redirecting the traffic.
+
+
+Example: Construction work trailers/trucks, road service vehicles etc.
+
+
+	  
+
+	HeavyEquipmentVehicle
+	Example: Tractor, Forklift, Excavator, agricultural vehicles, forestry vehicles, Heavy-duty dump truck (Haul truck) and Heavy-duty vehicles often used for
+construction tasks.
+	  
+
+  
+
+  
+
+  
+
+	AutoRickshaw
+	Example: Motorized Rickshaw, Auto Rickshaw, Tuk-Tuk, Mototaxi, bajaj, etc.
+	  
+
+	OtherVehicle
+	This category shall be used very restrictively. Only for vehicles that do not match any of the other categories.
+Should be annotated with the same precision and properties as vehicles.
+Example: All-terrain vehicle, Boom lift, Horse- or Ox drawn vehicles
+	  
+
+  
+
+	
+
+_________________________________________________________________________________________________________________
+
+
+Occlusion
+If parts of the vehicle are not seen in the image, the vehicle is occluded.
+
+
+Objects that may cover or occlude the annotated vehicle include other vehicles, pedestrians, fences, street lights, windshield wipers, etc, or if the vehicle in question is partially outside the image. This also applies for things that are semi-transparent, for example a sparse fence or a freeway divider.
+
+
+In general, weather conditions do not cause occlusion, e.g., heavy rain or fog does not cause blockage if it only limits the distance at which vehicles can be viewed clearly. However, if the weather condition causes direct blockage of the camera image, e.g., snow on the windshield, it can cause occlusion.
+
+
+A vehicle is not considered occluded by another vehicle if only the bounding boxes are overlapping, and not the actual vehicles.
+
+
+If a vehicle is fully occluded and then reappears, the same ObjectId shall be assigned to the vehicle both times.
+
+
+An object that becomes fully occluded and can’t be seen in the subsequent frames, should be annotated for at least 5 more frames by roughly estimating its position.
+
+
+* Since the object is fully occluded, the positioning of the bounding box is subject to vary between annotators. Therefore, the bounding box does not adhere to the same strict requirements as a fully visible object. However, it is still important that the position changes between frames similarly to how the object was moving when it was last seen.
+
+
+If an object has high occlusion (defined as ‘Occlusion90’ and ‘Fully’ in OcclusionsStatus), then only the 3D box, ObjectId and occlusion status are needed to be annotated.
+
+
+Type
+	Definition
+	Example
+	CAR
+90
+
+
+CAR
+None
+
+
+	The vehicle is heavily occluded, but parts of it can still be seen.
+	  
+
+	Truck
+40
+
+
+CAR
+None
+
+
+	Vehicle (truck) occluded by another vehicle (car)
+	  
+
+	Bus
+None
+
+
+CAR
+20
+
+
+	Vehicle (car) occluded by multiple objects.
+	  
+
+	Truck
+None
+
+
+Truck
+80
+
+
+	The mirror of Id1 is occluding Id2
+	  
+
+	
+
+_________________________________________________________________________________________________________________
+
+
+LaneAssignment
+
+
+The order and the type of the lane that the Vehicle is driving in.
+
+
+Each Vehicle should be assigned to a lane. The Vehicle is considered to occupy a lane if at least half of the Vehicle is on the lane. If the ego vehicle changes lane, the LaneAssignment of all Vehicles in the frame changes when the front center of the ego vehicle crosses the lane marking.
+
+
+If a Vehicle is precisely on the border of two lanes it should be assigned to the lane closest to the ego vehicle. If the proper choice for LaneAssignment is indeterminate, LaneAssignment shall be set to Unknown.
+
+
+The LaneAssignment property defines in which lane an annotated vehicle is driving on, relative to ego lane.
+This is capped at 2 lanes, a car that is 3 lanes to the left is still FurtherLeft and a car that is 3 lanes to the right is FurtherRight. Requirements: 
+
+
+LaneAssignment is only relevant for all the cases where the lane assignment is applicable, it is e.g. not applicable for vehicles in parking lots. If a vehicle is perpendicular to the road the ego vehicle is driving on, for example in crossroads, it should be assigned to the lane from ego vehicle’s road that it directly intersects with.  Example: if the perpendicular vehicle is crossing the ego lane in front of the ego vehicle, it should be assigned to the EgoLane. If the perpendicular vehicle is not directly crossing any of the lanes of the road the ego vehicle is driving on, laneAssignment will be set to Unknown.  
+
+
+The vehicle is considered to be lane changed when crossing the lane marking with the center of the front or rear side.
+  
+
+
+
+
+
+
+
+LaneAssignment
+	Definition
+	Example
+	Unknown
+	Unknown should be set if the lane markings are not visible on the road.
+	  
+
+	Unknown
+	The truck on the left is on another road and should be set as Unknown
+
+
+
+
+If any of the following conditions are true, set LaneAssignment to Unknown:
+
+
+* Perpendicular vehicles in a cross road that are not directly intersecting lanes of the road the ego  vehicle is driving on
+
+
+* Parking lots
+
+
+* Vehicles separated by a restricted area.
+
+
+	  
+
+	
+
+_________________________________________________________________________________________________________________
+
+
+ActiveLights
+
+
+The traffic signaling lights of the vehicle.
+
+
+* Annotate lights for vehicles further away than 100 m as OutOfRange, regardless of status.
+* Annotate lights for vehicles with LaneAssignment FurtherLeft or FurtherRight as OutOfRange, regardless of status.
+
+
+See the following sections for more detailed instructions for each active light for vehicles in range.
+  
+
+Type
+	Definition
+	Example
+	Brake
+	When the brake lights are visible and lit (emitting light), annotate Brake as On
+
+
+
+
+When the brake lights are visible and not lit (not emitting light), annotate Brake as Off
+	  
+
+	
+
+	In this example, only the tail lights are emitting light, not the brake lights.
+
+
+When the lights are visible, but it is not possible to determine if the brake lights are lit or not, annotate Brake as Unknown
+
+
+When the brake lights are not visible due to occlusion, annotate Brake as Occluded. In the cases of partial occlusion of some of the lights, where the status of the brake lights can still be clearly determined, Brake should not be annotated as Occluded.
+
+
+When the brake lights do not exist, annotate Brake as NotApplicable
+
+
+Requirements and Clarifications for Brakes:
+The brake lights can, if the vehicle is braking hard, blink similar to a turn indicator, but with higher frequency. If both brake lights are blinking, in combination with the center brake light, annotate Brake as IntervalOn.
+
+
+The left and right brake lights can, in some countries (e.g. USA), be combined with turn lights and tail lights. The center brake light is often used to resolve ambiguity.
+
+
+If the brake light and tail light is shared, the brake light is usually more intense when active, along with an active center brake light, only then should
+Brake be annotated as On.
+
+
+If the brake light is used as a turn indicator, only one of the lights will blink and the center brake light will not be active. In these cases, annotate Brake
+as Off.
+
+
+If the brake light is used as a turn indicator and the vehicle is braking, one of the lights will blink whilst the other has a solid intense light. In these cases,
+annotate Brake as On.
+
+
+For RoadWorkVehicle objects, ensure that warning lights are not annotated as brake lights.
+	  
+
+	TurnLeft
+	The left turn light is located on the left side of the annotated vehicle, relative to the vehicle itself.
+
+
+Annotate TurnLeft as On on the first frame that the left turn light turns on. If the turn light blinks multiple times, it’s not necessary to annotate TurnLeft as On every time it turns on, but only on the first blink.
+
+
+Annotate TurnLeft as Off on the first frame that the left turn light turns off and stops blinking. If the turn light blinks multiple times, it’s not necessary to annotate TurnLeft as Off every time it turns off, but only when it turns off and stays off.
+
+
+In all other frames in between when the left turn lights are visible and their status can be determined, annotate TurnLeft as IntervalOn, regardless of if the lights are on or off.
+
+
+In all other frames when lights are off, outside active interval, annotate them as Off.
+
+
+It is only necessary to explicitly annotate the first time the turn lights turn on and the last time they turn off because it is only necessary to mark the interval during which the turn lights are active.
+
+
+It’s possible that a driver turns off a turn light, then turns it on again, creating two subsequent turn light intervals. These should be marked separately, if possible. Go frame by frame to count how long a turn light stays on and off during an interval.
+
+
+When the left turn light is visible, but it is not possible to determine if it is lit or not, annotate TurnLeft as Unknown
+
+
+When the left turn light is not visible due to occlusion, annotate TurnLeft as Occluded
+
+
+When the left turn light does not exist, annotate TurnLeft as NotApplicable
+
+
+Requirements and Clarifications for TurnLeft
+In case of active hazard lights, annotate left and right turn lights as On.
+
+
+Regional deviations (i.e. North America)
+
+
+Turn lights can be red, not only orange.
+
+
+The brake lights might be used as turn lights instead of dedicated turn lights.
+
+
+If a vehicle is braking hard, the brake lights might have a high frequent blink, combined with an active center light. This has a very short duration and should not be misinterpreted as the hazard light.
+
+
+For RoadWorkVehicle objects, ensure that warning lights are not annotated as turn lights.
+	  
+
+	TurnRight
+	The right turn light is located on the right side of the annotated vehicle, relative to the vehicle itself.
+
+
+Annotate TurnRight as On on the first frame that the right turn light turns on. If the turn light blinks multiple times, it’s not necessary to annotate TurnRight as On every time it turns on, but only on the first blink.
+
+
+Annotate TurnRight as Off on the first frame that the right turn light turns off and stops blinking. If the turn light blinks multiple times, it’s not necessary to annotate TurnRight as Off every time it turns off, but only when it turns off and stays off.
+
+
+In all other frames in between when the right turn lights are visible and their status can be determined, annotate TurnRight as IntervalOn, regardless of if the lights are on or off.
+In all other frames when lights are off, outside active interval, annotate them as Off.
+
+
+It is only necessary to explicitly annotate the first time the turn lights turn on and the last time they turn off because it is only necessary to mark the interval during which the turn lights are active.
+
+
+It’s possible that a driver turns off a turn light, then turns it on again, creating two subsequent turn light intervals. These should be marked separately, if possible. Go frame by frame to count how long a turn light stays on and off during an interval.
+
+
+When the right turn light is visible, but it is not possible to determine if it is lit or not, annotate TurnRight as Unknown
+
+
+When the right turn light is not visible due to occlusion, annotate TurnRight as Occluded
+
+
+When the right turn light does not exist, annotate TurnRight as NotApplicable
+	  
+
+	
+
+_________________________________________________________________________________________________________________
+
+
+EmergencyType
+The EmergencyType property should be set to one of the following options, based on applicability for the vehicle.
+
+
+Type
+	Definition
+	None
+	None (for all non-emergency vehicles)
+	Police
+	(e.g. police car, police truck etc.)
+	Ambulance
+	(e.g. ambulance, ambulance car etc.)
+	Firefighter
+	(e.g. fire truck, fire command vehicle etc.)
+	Other
+	(e.g. Hazmat truck, customs vehicle, security vehicle, first responders, undercover police vehicles etc.)
+	
+
+_________________________________________________________________________________________________________________
+
+
+EmergencyLights
+A list of EmergencyLight objects, where each EmergencyLight has the attributes State and Color. List shall contain one color value for each unique color emitted by the vehicle’s emergency light in the current frame.
+
+
+Annotation applicable only for vehicles with EmergencyType NOT None. Annotated for all object types with mounted emergency lights, for objects at distances up to 100 m. Annotate emergency lights outside of 100m as OutOfRange, regardless of status.
+
+
+Type
+	Definition
+	  On
+	(The light is active and lit in the current frame)
+	  Off
+	(The light is not active)
+	IntervalOn
+	(The light is active but not lit)
+	Occluded
+	(The light is not visible due to occlusion)
+	Unknown
+	(The light is visible but it cannot be determined if it’s on or off)
+	NotApplicable
+	(The light is not visible or doesn’t exist)
+	Note: In order to be able to determine whether the lights are activated and deactivated surrounding frames needs to be analyzed.
+
+
+
+
+Color
+The color of the emergency lights mounted on the detected vehicle object, which is applicable during the entire sequence and not frame by frame.
+The emergency light can have the following color:
+  
+
+
+
+Since emergency lights can have different colors, an array should be used when determining the color range. If multiple colors are observed, add each applicable color and state to the array. If no emergency lights are available, EmergencyLight shall be empty list.
+If the color of the emergency light is not possible to determine (might not be emitting light), set color to Other.
+
+
+Type
+	Definition
+	Detailed Definition
+	On
+	When any part of an emergency light is being lit (emitting light) for the first time, set EmergencyLights to On.. Since we can see that the emergency light is red and blue, annotate both colors with their state.
+	  
+
+	IntervalOn / Off
+	When the emergency light is active, but is not emitting light in the current frame set it to IntervalOn. 
+
+
+The colors can not be seen in this frame, but we have them stored since the previous frame (example), and thus they will be reused.
+
+
+If the emergency light is not active (not emitting light), set EmergencyLights State to Off
+	  
+
+	
+
+__________________________________________________________________________________________________________________
+
+
+ProtrudingSides
+Protruding sides shall be annotated as a property of the vehicle object. A protruding object is something sticking out of the bounding box of the vehicle object, which is not a part of the vehicle itself (For example an open door is part of the vehicle and should therefore not be annotated as a protruding object). The protruding object does not have to be annotated as a vehicle object but shall instead be annotated as a property of the vehicle it is protruding from.
+
+
+The ProtrudingSides property shall be array with items with following values:
+Type
+	Choices
+	  Left
+	Yes
+No
+Unkown
+	Right
+	Yes
+No
+Unkown
+	Front
+	Yes
+No
+Unkown
+	Rear
+	Yes
+No
+Unkown
+	Up
+	Yes
+No
+Unkown
+	
+
+The ProtrudingSides property is set with the vehicle object as reference, similarly to how left/right is set for turn lights.
+Example: There is a plank sticking out of the vehicle’s right window, therefore the ProtrudingSides property should be set to Right.
+________________________________________________________________________________________
+
+
+ OpenDoors
+Open vehicle doors shall be annotated as a property of the vehicle object. The following objects are considered as open doors:
+* Open vehicle doors.
+* Open vehicle trunk/boot doors.
+* Open/unfolded loading surfaces/ramps of Vans, Trucks and TruckTrailers.
+
+
+The OpenDoor property shall be an array with items with following values:
+* Left
+* Right
+* Hood
+* Trunk
+* LoadingSurface
+
+
+The state of the open door property is set with the vehicle object as reference, similarly to how left/right is set for turn lights.
+
+
+__________________________________________________________________________________________________________________
+
+
+Nondescript Vehicles
+
+
+A vehicle or a group of vehicles shall be annotated as a NondescriptVehicle object if any of the following are true:
+
+
+* The vehicle fulfills the pixel size or distance interval to be annotated as NondescriptVehicle described in Objects to be annotated, for example vehicles on the EgoRoad that are too far away to be considered as Vehicle annotation.
+* The vehicle is driving on a road that is not part of the EgoRoad.
+* The vehicle is driving on a lane that is separated from the EgoLane by a physical barrier.
+* The vehicle is located on a parking lot or some other surface that is not part of the EgoRoad and does not have an impact on driving of the EgoVehicle.
+* The vehicle is not an actual vehicle (e.g. reflections, statues and posters).
+* The vehicle is covered by a tarpaulin.
+* A group of vehicles can be annotated as a single NondescriptVehicle object in cases where there are more vehicles closely clustered together, for example parked vehicles on a parking lot.
+
+
+The attributes we’re gonna annotate for NondescripVehicles are:
+  
+
+
+
+For NondescriptType, options are:
+
+
+  
+
+
+
+__________________________________________________________________________________________________________________
+PEDESTRIAN
+
+
+        Contents
+OcclusionLevel 
+	ControlsTraffic
+	AttachedTo
+	HeadObscured
+	Velocity 
+	Acceleration
+	Lane
+	ClothesObscuringLegs
+	Pose
+	Accessories
+	OcclusionOrigin
+	SkinColor
+	HeadOrientation
+	LookingAtPhone
+	BodyOrientation
+	PersonalTransporter
+	SignalingATurn
+	
+
+	SpecialTrafficParticipant
+	
+
+	
+
+Value in the range 0 – 100, in increments of 10, representing the Pedestrian’s percentage of occlusion.
+Note that Occlusion Level has an error tolerance of ±10% during quality reviews. However, there is no error tolerance for the extreme cases:
+* OcclusionLevel shall be 0% if and only if the Pedestrian is fully visible.
+* OcclusionLevel shall be 100% if and only if the Pedestrian is fully occluded.
+The following images provide examples of occlusion in percentages.
+
+
+__________________________________________________________________________________________________________________
+
+
+Occlusion Level
+Tolerance level of ±10% during quality reviews. However, there is no error tolerance for the extreme cases:
+* OcclusionLevel shall be 0% if and only if the Pedestrian is fully visible.
+* OcclusionLevel shall be 100% if and only if the Pedestrian is fully occluded.
+
+
+Type
+	Definition
+	Example
+	10%
+	
+
+	  
+
+	20%
+	
+
+	  
+
+	30 %
+	
+
+	  
+
+	40 %
+	
+
+	  
+
+	40  %
+	
+
+	  
+
+	50  %
+	
+
+	  
+
+	80  %
+	
+
+	  
+
+	90  %
+	
+
+	  
+
+	
+
+The edge of field-of-view counts as occlusion: if the Pedestrian extends beyond the edge of the image, it is occluded.
+
+
+In cases where the Pedestrian is riding a TwoWheeler, note that the TwoWheeler and its riders do not occlude each other.
+  
+
+The TwoWheeler does not occlude the rider (and vice versa). Occlusion Level is set to 0% for the Pedestrian (and for the TwoWheeler).
+
+
+This is only true if the person is actually riding the TwoWheeler, however.
+  
+
+The Pedestrian is occluded by the TwoWheeler, since he is not riding it. Occlusion Level is c.a. 40%.
+________________________________________________________________________________________________________________
+
+
+
+
+
+
+AttachedTo
+
+
+Pedestrians and other objects are often attached to each other, for example when
+
+
+* a Pedestrian is carrying a child.
+* a Pedestrian is walking a dog.
+* a Pedestrian is riding a bicycle.
+* a Pedestrian is leading a bicycle.
+* a Pedestrian is pushing a stroller.
+* Two  Pedestrians are riding a motorcycle. (In this case, each pedestrian is attached to the motorcycle. Not to each other.)
+
+
+When a Pedestrian is attached to some object, the AttachedTo list must contain an entry specifying the id and type of the object. A Pedestrian
+can be AttachedTo several objects. The AttachedTo property is bidirectional, so if a pedestrian is AttachedTo an object, the object shall also
+be annotated as AttachedTo the pedestrian.
+
+
+Type
+	Definition
+	Example
+	Objects carried/pushed by pedestrians, e.g. trolley, bike…
+	
+
+	  
+  
+
+  
+  
+
+	Pedestrian on a 2-wheeled vehicle, e.g. riding a bicycle or a motorbike.
+	
+
+	  
+  
+
+	Pedestrians on vehicles/cargos.
+	
+
+	  
+
+	
+
+
+
+Note: Pedestrians inside vehicles, e.g. driving a car/truck or as passenger is a special case. See Pedestrians Inside Vehicles.
+
+
+
+
+AttachedToId
+	Id of the object that the pedestrian is attached to.
+	AttachedToType
+	Type of the object that the pedestrian is attached to.
+	
+
+________________________________________________________________________________________________________
+
+
+Velocity
+The pedestrian’s velocity relative the ground. The velocity should refer to the pelvic point.
+
+
+Object Velocity (m/s)
+	x Tolerance 
+	y Tolerance
+	0 up not including 10
+	0.2
+	0.04
+	10 up not including 20
+	0.2
+	0.004 * object velocity
+	20 and above 
+	0.2
+	0.8
+	
+
+
+
+Acceleration
+The pedestrian’s acceleration relative to the ground. The acceleration should refer to the pelvic point.
+
+
+Radial Distance (m)
+	x tolerance (m/s2)
+(good weather)
+	x tolerance (m/s2)
+(bad weather)
+	y tolerance (m/s2)
+(good weather)
+	y tolerance (m/s2)
+(bad weather)
+	0 up not including 40
+	0.2
+	0.6
+	0.1
+	0.2
+	40 up not including 80
+	0.6
+	1.2
+	0.1
+	0.2
+	
+
+
+
+-Pose
+The pose, or posture, of the Pedestrian.
+
+
+Type
+	Definition
+	Example
+	Standing
+	The pedestrian is standing mostly upright, either on the ground or on a vehicle.
+
+
+
+
+
+
+If pedestrian is attached to scooter pose needs to be standing
+	  
+  
+  
+  
+
+	Bending
+	The pedestrian is bending more than 30 degrees
+	  
+
+	Lying
+	
+
+	  
+
+	Kneeling
+	
+
+	  
+  
+
+	Sitting
+	The pedestrian is in a sitting pose, either on an immobile object or a vehicle.
+	  
+  
+
+  
+  
+
+  
+
+(In this last photo the driver is Sitting and the passenger is Straddling.)
+	Walking
+	
+
+	  
+
+	Running
+	
+
+	  
+  
+
+	Crawling
+	The pedestrian is crawling on its hands and feet or hands and knees.
+	  
+
+  
+
+	Straddling
+	The pedestrian is straddling something e.g., a bike.
+	  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+
+	GettingIntoOutOfVehicle
+	
+
+	  
+  
+  
+
+	Unknown 
+	The pedestrian’s pose state is set to Unknown when not behaving as defined in previous sections.
+	
+
+	
+
+
+
+Lane
+The order and the type of the lane that the Pedestrian is driving in.
+  
+
+  
+
+
+
+Each Pedestrian should be assigned to a lane. The Pedestrian is considered to occupy a lane if at least half of the Pedestrian is on the lane. If the ego vehicle changes lane, the LaneAssignment of all Pedestrians in the frame changes when the front center of the ego vehicle crosses the lane marking.
+
+
+If a Pedestrian is precisely on the border of two lanes it should be assigned to the lane closest to the ego vehicle. If the proper choice for LaneAssignment is indeterminate, LaneAssignment shall be set to Unknown.
+
+
+  
+
+
+
+  
+
+
+
+
+
+LaneType
+Coupled with LaneAssignment for more complete information about the Lanes. Gives a descriptive type of the lane which is assigned to a Pedestrian.
+  
+
+
+
+
+
+
+
+
+
+Type
+	Example
+	Sidewalk, BicycleLane, AltLane, Parking
+	  
+
+	Parking (Garage)
+	  
+
+	CarLane, AltLane, BicycleLane, Sidewalk
+	  
+
+	
+
+
+
+
+
+SignalingATurn
+This property shall be set independently for each frame. Past or future frames shall not be used to derive the value.
+
+
+Signaling left and right respectively.
+
+
+Type
+	Definition
+	Example
+	Left
+	Signaling left
+	  
+
+	Right
+	Signaling Right
+	  
+
+	
+
+
+
+SpecialTrafficParticipant
+This property shall be set independently for each frame. Past or future frames shall not be used to derive the value.
+
+
+Signaling left and right respectively.
+Type
+	Definition
+	Example
+	Police
+	
+
+	  
+  
+
+	FireFighter
+	
+
+	  
+  
+
+	ConstructionWorker
+	
+
+	  
+  
+
+	Paramedic
+	
+
+	  
+  
+
+	
+
+
+
+
+
+
+
+
+
+
+
+ControlsTraffic
+Set to True if a pedestrian controls the traffic by showing hand gestures or raising traffic signs.
+
+
+Type
+	Definition
+	Example
+	Yes
+	
+
+	  
+
+	Yes
+	
+
+	  
+
+	Yes
+	
+
+	  
+
+	No
+	
+
+	  
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+HeadObscured
+The pedestrian wears clothes that obscure or alter the shape of the neck or head, like a veil, hood, cowl or has a hairstyle that obscures the
+head/neck.
+
+
+The following pedestrians have HeadObscured set to True
+Type
+	Example
+	Yes
+	  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+	No
+	  
+  
+  
+  
+
+	
+
+This property shall be set independently for each frame. Past or future frames shall not be used to derive the value.
+
+
+
+
+
+
+
+
+
+
+ClothesObscuringLegs
+Clothes like skirts, dresses, veils, long tunics or kaftans that obscures the legs of the pedestrian so that each leg is not easily visible (i.e. the
+piece of cloth does not wrap around each leg individually).
+  
+
+
+
+The approximate length at which clothes “start to obscure legs”.
+
+
+Type
+	Description
+	Example
+	Yes
+	Long dresses, skirts and kilts that obscures the legs.
+
+
+The lower part of the tunic obscures the upper parts of the legs
+
+
+The skirt does not obscure the legs for the most part but its shape makes the mid part of the pedestrian look different from a pedestrian wearing pants.
+	  
+  
+  
+
+  
+     
+
+
+	No
+	The dress is short and narrow enough to not alter the shape of the pedestrian, i.e. ClothesObscuringLegs can be “No”.
+	  
+
+	
+
+NOTE: This property shall be set independently for each frame. Past or future frames shall not be used to derive the value.
+
+
+
+
+Accessories
+
+
+This property shall be set independently for each frame. Past or future frames shall not be used to derive the value.
+This property shall be annotated as True/False for each category.
+Type
+	Description
+	Example
+	Headdress
+	The pedestrian is wearing some sort of headdress.
+	  
+
+  
+
+	UnfoldedUmbrella
+	The pedestrian is holding an unfolded umbrella.
+	  
+
+	ReflectiveClothing
+	The pedestrian is wearing reflective clothing, such as vests or harnesses.
+	  
+
+	CloseToBody
+	The pedestrian is wearing/carrying some sort of backpack, bulky object or child on its front, back, side or shoulders. The idea is to annotate pedestrians that are wearing objects that alter their shape. 
+
+
+
+
+The following two objects are about the minimum size that should be annotated in the CloseToBody category. If they are smaller than this they should have CloseToBody set to False.
+ 
+  
+   
+	  
+
+  
+
+	HandAccessory
+	The pedestrian is carrying/pulling/pushing an object that is larger than approximately 10x10 cm. This means small objects like phones, keys
+and cans do not count as HandAccessories. The idea is to annotate objects that extend the arms of pedestrians. Pedestrians holding each
+other hands also belong to this category.
+	  
+
+  
+
+	HeadLamp
+	The pedestrian has a light source affixed to the head.
+	  
+
+	
+
+________________________________________________________________________________________________________
+
+
+SkinColor
+
+
+This property shall be set independently for each frame. Past or future frames shall not be used to derive the value.
+This property shall be annotated as True/False for each category.
+Type
+	Description
+	Example
+	White, Brown and Black skin color.
+	
+
+	  
+
+	Unknown.
+	When the skin color can not be determined. This can be due to distance, lighting conditions or if the skin is not visible
+
+
+	  
+  
+
+	
+
+NOTE: This property shall be set independently for each frame. Past or future frames shall not be used to derive the value.
+________________________________________________________________________________________________________
+
+
+LookingAtPhone
+
+
+Pedestrians looking at their (or someone elses) phone and are not paying attention to the world around them.
+Type
+	Description
+	Example
+	Yes
+	
+
+	  
+  
+
+	No
+	
+
+	  
+
+	Unknown 
+	
+
+	  
+
+	
+
+NOTE: This property shall be set independently for each frame. Past or future frames shall not be used to derive the value.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PersonalTransporter
+
+
+Pedestrians using a small transportation device not classified as a vehicle.
+
+
+Type
+	Description
+	Example
+	Skateboard
+
+
+	
+
+	  
+
+	Hoverboard
+
+
+	
+
+	  
+
+	Segway
+
+
+	
+
+	  
+
+	Rollerskates
+
+
+	
+
+	  
+  
+
+	Unicycle
+
+
+	
+
+	  
+
+	Other
+
+
+	
+
+	  
+
+	None
+	
+
+	  
+
+	
+
+NOTE: This property shall be set independently for each frame. Past or future frames shall not be used to derive the value.
+
+
+OcclusionOrigin
+
+
+Where does the occlusion come from?
+  
+
+
+
+
+
+
+
+Type
+	Description
+	Example
+	FromTopLeft
+	
+
+	  
+
+	FromBottomLeft
+	
+
+	  
+
+	FromCenterHorizontal
+	
+
+	  
+
+	FromRight
+	
+
+	  
+
+	FromLeft
+	
+
+	  
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+HeadDirection
+The direction in which the Pedestrian’s head is facing relative to the ego vehicle. If the Pedestrian is between two directions (eg. NN- NW), direction shall be set to the closest one.
+
+
+Direction
+	
+
+	NN
+NE
+EE
+SE
+SS
+SW
+WW
+NW
+Unknown
+	  
+
+	
+
+Examples
+
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+BodyDirection
+
+
+The same concept as for HeadDirection but the direction refers to the front of the pedestrian’s torso instead of the front of its head.
+
+
+
+
+
+
+
+
+
+
+NondescriptPedestrians
+
+
+NondescriptPedestrians shall be annotated as such if any of the following are true:
+* The person fulfills the appropriate distance criteria described in Objects To Be Annotated.
+* The person is not an actual human (e.g. reflections, statues and posters).
+* The person is behind a flat transparent object, such as a windscreen or a store window.
+* The person is a child carried by an adult, or riding in a stroller or bicycle trailer.
+The NondescriptPedestrian is annotated by using a 3D Bounding Box.
+
+
+  
+
+
+
+
+
+
+
+
+
+Type
+	Description
+	Example
+	
+
+Mannequin
+
+
+	Mannequins shall be nondescript with NondescriptType set to Mannequin.
+	  
+  
+
+	
+
+Reflection
+
+
+	Reflections shall be nondescript with NondescriptType set to either Reflection or ReflectionOnGround. The latter shall be used for reflections on the ground: in puddles, wet surfaces, etc.
+	  
+
+	Image
+	Posters showing the entire or upper parts of a pedestrian shall be nondescript with NondescriptType set to Image.
+	  
+
+	Statue
+	Humanlike statues shall be nondescript with NondescriptType set to Statue.
+	
+
+  
+
+	CarriedChild
+	Children carried by pedestrians shall be annotated as nondescript with NondescriptType set to CarriedChild. (Note: the pedestrian that is carrying shall be annotated as usual according to Pedestrian Annotation.)
+	  
+  
+
+  
+
+	
+
+
+
+BehindGlass
+
+
+	The left bounding box contains several objects, since they are close together. The right bounding box contains only the visible part of the of the Nondescript
+Pedestrian. Here, the Nondescript Types are Image and BehindGlass.
+	  
+
+	TooFarAwaySingle
+
+
+TooFarAwayGroup
+	
+
+	
+
+	
+
+Excluded
+	
+
+	
+
+	Other
+
+
+	Pedestrians Inside Vehicles
+
+
+Pedestrians inside vehicles shall be annotated as nondescript. For these cases, the annotation is only required if the pedestrian is clearly seen
+in the camera image. Otherwise, no annotation is necessary. However, note that people getting out of or into a vehicle shall be annotated, as
+shall people on the cargo area of a truck. A rule of thumb is that pedestrians only seen through a windscreen shall be nondescript, with
+NondescriptType set to BehindGlass.
+
+
+	  
+
+	
+
+________________________________________________________________________________________________________
+
+
+Pedestrians outside drivable space are nondescript
+The pedestrians that are outside the drivable space of our ego-vehicle, i.e. they cannot physically move to our location and cannot interact with each other within the next seconds shall be annotated as nondescript pedestrians.
+Here are some example scenarios:
+
+
+  
+
+Pedestrians that are behind barriers not intended to be crossed
+
+
+  
+
+Pedestrians that are behind hedges
+
+
+
+
+  
+
+Pedestrians on pavements behind parked vehicles
+
+
+________________________________________________________________________________________________________
+TWO WHEELER
+The object type of the TwoWheeler. If the true type cannot be discerned, then ObjectType shall be set to Bicycle (if the two-wheeler does not appear to be motorized) or Motorcycle (if the two-wheeler appears to be motorized).
+
+
+Contents
+ObjectType 
+	ProtrudingSides
+	BoundingBox
+	Velocity
+	OcclusionLevel 
+	CutinOut
+	Acceleration 
+	
+
+	AttachedTo
+	OcclusionOrigin
+	HasRider 
+	PoseOrientation
+	Lane 
+	HasBabySeat
+	Lights
+	HasCargoBox
+	EmergencyLights
+	HasDeliveryBox
+	
+
+
+
+
+
+Type
+The object type of the TwoWheeler. If the true type cannot be discerned, then ObjectType shall be set to Bicycle (if the two-wheeler does not appear to be motorized) or Motorcycle (if the two-wheeler appears to be motorized).
+Type
+	Example
+	Bicycle
+	  
+
+	Motorcycle
+	  
+
+	SmallWheeledBicycle
+	  
+
+	RecumbentBicycle
+	  
+
+	KickScooter
+	  
+
+	Tricycle
+	  
+
+	PoweredTricycle
+	  
+
+	Bicycle, Trailer
+	  
+
+	Other
+	  
+
+  
+
+	Other, Motorcycle
+	  
+
+	
+
+_________________________________________________________________________________________________________________
+
+
+
+
+BoundingBox 
+
+
+A Box3D object representing the 3D bounding box of the TwoWheeler. The box contains the entire TwoWheeler, and is otherwise as small as possible. The rider(s) of the TwoWheeler shall not be taken into account when drawing the bounding box, and neither shall large objects carried by the TwoWheeler (see ProtrudingSides). Side-view mirrors and windshields shall also not be taken into account.
+The BoundingBox3D shall be placed and oriented such that the top, left and front of the box correspond to the top, left and front of the two-wheeler. The front direction of a TwoWheeler is defined as the direction that the TwoWheeler’s frame is primarily designed to move in.
+
+
+      
+Note: The images above are only added for the sake of illustration. BoundingBox3D is an object in the world, not the image. The 3D box does not include the protruding topbox.
+
+
+________________________________________________________________________________________________________
+
+
+Occlusion
+The OcclusionLevel describes, in percentage (%), approximately how much of the annotated TwoWheeler is occluded.
+
+
+Note that this property only describes the occlusion of the actual TwoWheeler – occlusion that only affects the rider(s) shall not be considered. Further, rider(s) cannot occlude their own TwoWheeler.
+Type
+	Example
+	0 %
+	  
+
+	20 %
+	  
+
+	40 %
+	  
+
+	80 %
+	  
+
+	100 %
+	  
+
+	
+
+_________________________________________________________________________________________________________________
+
+
+AttachedTo
+
+
+A TwoWheeler may sometimes be ridden, carried, pulled or pushed by another object. In these cases, the TwoWheeler’s AttachedTo property shall be set to the ObjectId and type of the other object. A TwoWheeler can be AttachedTo several objects. The AttachedTo property is bidirectional, so if a TwoWheeler is AttachedTo an object, the object shall also be annotated as AttachedTo the TwoWheeler. Some examples are:
+Type
+	Definition
+	Example
+	
+
+	A trailer being pulled by a bicycle. The bicycle’s AttachedToId is set to the ObjectId of the bicycle and AttachedToType is set to TwoWheeler.
+	  
+
+	
+
+	A bicycle being walked by a pedestrian. The bicycle’s AttachedToId property is set to the ObjectId of the pedestrian and AttachedToType is set to Pedestrian.
+	  
+
+	
+
+	* a bicycle strapped to the rear (or roof) of a car. The bicycle’s AttachedToId property is set to the ObjectId of the car and AttachedToType is set to Vehicle.
+	  
+
+	
+
+	* a motorcycle carried by a trailer pulled by a car. The motorcycle’s AttachedToId property is set to the ObjectId of the trailer and AttachedToType is set to Vehicle.
+	  
+
+	
+
+
+
+Value
+	Description
+	AttachedToId
+	Id of the object that the TwoWheeler is attached to.
+	AttachedToType
+	Type of the object that the TwoWheeler is attached to.
+	
+
+_________________________________________________________________________________________________________________
+
+
+HasRider
+HasRider is set to False for TwoWheelers with no rider. For trailers and strollers, this property shall default to True. Only if the trailer/stroller is open and clearly does not contain a rider, it shall be set to False
+
+
+Type
+	Definition
+	Example
+	False
+	
+
+	  
+
+	False
+	
+
+	  
+
+	True
+	
+
+	  
+
+	
+
+
+
+
+
+Velocity
+Check Pedestrians velocity (same values)
+
+
+Acceleration
+The TwoWheeler’s acceleration relative to the ground.
+Radial Distance (m)
+	x tolerance (m/s2)
+(good weather)
+	x tolerance (m/s2)
+(bad weather)
+	y tolerance (m/s2)
+(good weather)
+	y tolerance (m/s2)
+(bad weather)
+	0 up but not including 40
+	0.2
+	0.6
+	0.1
+	0.2
+	40 up but not including 80
+	0.6
+	1.2
+	0.1
+	0.2
+	
+
+
+
+Lights
+This property shall be set independently for each frame. Past or future frames shall not be used to derive the value.
+
+
+Type
+	Definition
+	Example
+	Brake–
+	
+
+	  
+
+	TurnLeft
+	
+
+	  
+
+	TurnRight
+	
+
+	  
+
+	
+
+
+
+Emergency Lights
+The emergency lights of the TwoWheeler, if present.
+An emergency TwoWheeler may have several sets of emergency lights, often in different colors and flashing out of sync. Because of this, the emergency lights of a TwoWheeler are annotated as a list of EmergencyLight objects. Each such object has a State and a Color. The list shall contain one object per unique color exhibited by the emergency lights throughout the recording – for example, if a Police TwoWheeler has two sets of blue lights and one set of red lights, then EmergencyLights shall contain two objects: one for the blue lights, and one for the red light.
+
+
+The State of an EmergencyLight object is described by the following Enum:
+Type
+	Definition
+	  On
+	(The light is active and lit in the current frame)
+	  Off
+	(The light is not active)
+	IntervalOn
+	(The light is active but not lit)
+	Occluded
+	(The light is not visible due to occlusion)
+	Unknown
+	(The light is visible but it cannot be determined if it’s on or off)
+	NotApplicable
+	(The light is not visible or doesn’t exist)
+	
+
+Note: Surrounding frames need to be analyzed in order to separate between the Off and ActiveOff states.
+
+
+The color of an EmergencyLight object is described by the following Enum:
+
+
+  
+
+
+
+Example annotations:
+Type
+	Example
+	ActiveOn, Blue
+ActiveOff, Orange
+	  
+
+	ActiveOff, Blue
+ActiveOn, Orange
+	  
+
+	ActiveOn, Blue
+ActiveOn, Orange
+	  
+
+	
+
+
+
+: 
+
+
+
+
+
+
+
+
+Lane
+
+
+The order and the type of the lane that the TwoWheeler is driving in.
+  
+
+  
+
+
+
+Remember to annotate the correct lane assignment according to the type of lane and the position of the object.
+
+
+Each TwoWheeler should be assigned to a lane. The TwoWheeler is considered to occupy a lane if at least half of the TwoWheeler is on the lane. If the ego vehicle changes lane, the LaneAssignment of all TwoWheelers in the frame changes when the front center of the ego vehicle crosses the lane marking.
+
+
+If a TwoWheeler is precisely on the border of two lanes it should be assigned to the lane closest to the ego vehicle. If the proper choice for LaneAssignment is indeterminate, LaneAssignment shall be set to Unknown.
+
+
+  
+
+
+
+Type
+	Example
+	EgoLane
+	  
+
+	FirstLeft
+	  
+
+	FirstRight
+	  
+
+	FurtherLeft
+	  
+
+	FurtherRight
+	  
+
+	Unknown
+	  
+
+	
+
+________________________________________________________________________________________________________
+
+
+LaneType
+Coupled with LaneAssignment for more complete information about the Lanes. Gives a descriptive type of the lane which is assigned to a TwoWheeler.
+  
+
+
+
+
+
+
+
+
+
+Type
+	Example
+	Sidewalk, BicycleLane, AltLane, Parking
+	  
+
+	Parking (Garage)
+	  
+
+	CarLane, AltLane, BicycleLane, Sidewalk
+	  
+
+	
+
+________________________________________________________________________________________________________
+
+
+ProtrudingSides
+This property shall be set independently for each frame. Past or future frames shall not be used to derive the value.
+
+
+ProtrudingSide shall be annotated to Yes for a direction if the TwoWheeler is carrying cargo which protrudes from it by more than 20% of the bounding box’s extension. The direction is chosen based on the perspective of the TwoWheeler. This means that e.g. a bicycle with a protrusion on its left side will have ProtrudingSide Left set to Yes  regardless of whether the bicycle is oncoming or preceding.
+
+
+These are the options you will have.
+Type
+	Choices
+	  Left
+	Yes
+No
+Unkown
+	Right
+	Yes
+No
+Unkown
+	Front
+	Yes
+No
+Unkown
+	Rear
+	Yes
+No
+Unkown
+	Up
+	Yes
+No
+Unkown
+	
+
+
+
+Type
+	Example
+	Left: Yes, Right: Yes
+	  
+
+	Rear: Yes
+	  
+
+	Left: Yes, Right: Yes, Rear: Yes, Up:
+Yes
+	  
+
+	
+
+________________________________________________________________________________________________________
+
+
+HasBabySeat
+Baby seats can be in different locations on a bike or a motorcycle: front, rear and even middle. This property is annotated for each frame independently. This means that HasBabySeat shall only be set to Yes if a baby seat is clearly visible in the current frame – if it is impossible to discern (due to e.g. distance or occlusion) whether or not a baby seat is attached to the TwoWheeler, HasBabySeat shall be set to Unknown. It also means that even if we know from frame T that the TwoWheeler has a baby seat, HasBabySeat shall still be set to Unknown in frameT +5 if it can no longer be clearly seen in that frame.
+
+
+Type
+	Example
+	Yes
+	  
+
+	No
+	  
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+HasCargoBox
+HasCargoBox is set to Yes for TwoWheelers equipped with a cargo box, either intended for carrying children or general cargo. Cargo boxes are large and are typically build into the TwoWheeler’s frame – this means that e.g. bicycle baskets and typical scooter trunks are not considered to be cargo boxes for the purposes of this property. The cargo box itself may be open or covered by e.g. a lid, a textile tarp or a windowed roof.
+This property is annotated for each frame independently. This means that HasCargoBox shall only be set to Yes if a cargo box is clearly visible in the current frame – if it is impossible to discern (due to e.g. distance or occlusion) whether or not a cargo box is attached to the TwoWheeler, HasCargoBox shall be set to Unknown. It also means that even if we know from frame T that the TwoWheeler has a cargo box, HasCargoBox shall still be set to Unknown in frame T+5 if it can no longer be clearly seen in that frame.
+
+
+Type
+	Example
+	Yes
+	  
+
+	Yes
+	  
+
+	Yes
+	  
+
+	No
+	  
+
+	No
+	  
+
+
+
+	This property shall be set independently for each frame. Past or future frames shall not be used to derive the value.
+
+
+
+
+
+
+
+
+HasDeliveryBox
+HasDeliveryBox is set to Yes if a cube-shaped delivery box is attached to theT woWheeler. Delivery boxes come in different colors and sizes, but are larger than the small loading cases typically attached on the rear of
+e.g scooters or motorcycles. Note that HasDeliveryBox shall only be set to Yes if the box is attached to the TwoWheeler itself – delivery boxes that are worn as backpacks do not count.
+This property is annotated for each frame independently. This means that HasDeliveryBox shall only be set to Yes if a delivery box is clearly visible in the current frame – if it is impossible to discern (due to e.g. distance or occlusion) whether or not a delivery box is attached to the TwoWheeler, HasDeliveryBox shall be set to Unknown. It also means that even if we know from frame T that the TwoWheeler has a delivery box, HasDeliveryBox shall still be set to Unknown in frame T+5 if it can no longer be clearly seen in that frame.
+
+
+Type
+	Example
+	Left TW = No,
+
+
+ Right TW = Yes (green box)
+	  
+
+	Yes (teal and yellow box)
+	  
+
+	Yes
+	  
+
+	Unknown (occluded)
+	  
+
+	
+
+NOTE: This property shall be set independently for each frame. Past or future frames shall not be used to derive the value.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CutInOut
+This property describes whether the TwoWheeler is cutting in or out of traffic in the current frame. A TwoWheeler is considered to be cutting while any part of it is crossing the lane separator marking.
+
+
+  
+
+  
+
+
+
+The CutInOut property is only of interest for TwoWheelers that are either on the ego lane, or on directly neighboring lanes: in other words, TwoWheelers whoseL aneAssignment is either EgoLane, FirstLeft or
+FirstRight. For all other TwoWheelers, CutInOut is set to None.
+
+
+Type
+	Example
+	CutIn
+	  
+
+	
+
+
+
+OcclusionOrigin
+OccludedOrigin describes from which point(s) of the TwoWheeler’s bounding box the occlusion originates.
+  
+
+
+
+Note that this property only describes the occlusion of the actual TwoWheeler – occlusion that only affects the rider(s) shalln ot be considered. Further, rider(s) cannot occlude their own TwoWheeler.
+
+
+Type
+	Example
+	None
+	  
+
+	FromBottomLeft
+	  
+
+	FromBottom
+	  
+
+	FromLeft
+	  
+
+	All
+	  
+
+	FromBottomLeft
+	  
+
+	FromBottomLeft
+	  
+
+	All
+	  
+
+	
+
+
+
+
+
+
+
+
+
+
+
+NondescriptTwoWheeler
+A two-wheeler shall be annotated as a NondescriptTwoWheeler object if any of the following are true:
+
+
+The two-wheeler fulfills the appropriate distance criteria described in Objects To Be Annotated.
+The two-wheeler is not an actual vehicle (e.g. reflections, statues and posters).
+The two-wheeler is behind a flat transparent object, such as a store window.
+The two-wheeler is parked or laid on the ground.
+NondescriptTwoWheelers are annotated with a generic 3D Bounding Box. 
+
+
+A NondescriptTwoWheeler object has the following properties:
+NondescriptType
+	Description
+	Examples
+	Image
+	A poster, advertisement, mural, or similar.
+	  
+ Simplistic depictions of two-wheelers do not need to be annotated. 
+
+
+
+
+
+	Reflection
+	A reflection of a real two-wheeler on a vertical surface.
+	  
+
+	ReflectionOnGround
+	A reflection of a real two-wheeler on the ground.
+	  
+
+	Statue
+	A statue.
+	  
+
+	ParkedSingle
+	A single parked two-wheeler (may be lying on the ground).
+	  
+
+	ParkedGroup
+	A group of parked two-wheelers very close together.
+	  
+
+	BehindGlass
+	A real two-wheeler behind a glass pane.
+	  
+
+	TooFarAwaySingle
+	A single two-wheeler at a long distance. (If the two-wheelers are parked, use ParkedSingle.)
+	  
+
+	TooFarAwayGroup
+	A group of two-wheelers very close together, at a long distance. (If the two-wheelers are parked, use ParkedGroup.)
+	  
+
+	Other
+	All other nondescript types.
+	
+
+	
+
+
+
+Version 2.0 - 10/26/2023
